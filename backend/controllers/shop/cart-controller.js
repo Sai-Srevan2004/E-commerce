@@ -55,6 +55,8 @@ const fetchCartItems = async (req, res) => {
   try {
     const { userId } = req.params;
 
+    console.log(userId,"pppppppp")
+
     if (!userId) {
       return res.status(400).json({
         success: false,
@@ -68,6 +70,7 @@ const fetchCartItems = async (req, res) => {
     });
 
     if (!cart) {
+      console.log("not found cart")
       return res.status(404).json({
         success: false,
         message: "Cart not found!",
@@ -91,8 +94,8 @@ const fetchCartItems = async (req, res) => {
       salePrice: item.productId.salePrice,
       quantity: item.quantity,
     }));
-
-    res.status(200).json({
+    console.log(populateCartItems)
+    return res.status(200).json({
       success: true,
       data: {
         ...cart._doc,
@@ -101,7 +104,7 @@ const fetchCartItems = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Error",
     });

@@ -42,7 +42,7 @@ const createOrder = async (req, res) => {
     });
 
     await newlyCreatedOrder.save();
-
+    console.log(razorpayOrder,"000000000000000000")
     res.status(201).json({
       success: true,
       razorpayOrderId: razorpayOrder.id,
@@ -65,7 +65,7 @@ const capturePayment = async (req, res) => {
 
     // verify signature
     const generatedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .createHmac("sha256", process.env.RAZORPAY_SECRET)
       .update(`${razorpayOrderId}|${razorpayPaymentId}`)
       .digest("hex");
 

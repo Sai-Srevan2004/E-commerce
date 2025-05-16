@@ -7,7 +7,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "../../components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
 import { addProductFormElements } from "@/config";
 import {

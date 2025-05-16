@@ -169,8 +169,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             <h2 className="text-xl font-bold mb-4">Reviews</h2>
             <div className="grid gap-6">
               {reviews && reviews.length > 0 ? (
-                reviews.map((reviewItem) => (
-                  <div className="flex gap-4">
+                reviews.map((reviewItem,i) => (
+                  <div className="flex gap-4" key={i}>
                     <Avatar className="w-10 h-10 border">
                       <AvatarFallback>
                         {reviewItem?.userName[0].toUpperCase()}

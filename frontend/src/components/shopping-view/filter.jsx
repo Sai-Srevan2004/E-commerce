@@ -1,51 +1,43 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
-import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
-import UserCartItemsContent from "./cart-items-content";
+import { filterOptions } from "@/config";
+import { Fragment } from "react";
+import { Label } from "../ui/label";
+import { Checkbox } from "../ui/checkbox";
+import { Separator } from "../ui/separator";
 
-function UserCartWrapper({ cartItems, setOpenCartSheet }) {
-  const navigate = useNavigate();
-
-  const totalCartAmount =
-    cartItems && cartItems.length > 0
-      ? cartItems.reduce(
-          (sum, currentItem) =>
-            sum +
-            (currentItem?.salePrice > 0
-              ? currentItem?.salePrice
-              : currentItem?.price) *
-              currentItem?.quantity,
-          0
-        )
-      : 0;
-
+function ProductFilter({ filters, handleFilter }) {
   return (
-    <SheetContent className="sm:max-w-md">
-      <SheetHeader>
-        <SheetTitle>Your Cart</SheetTitle>
-      </SheetHeader>
-      <div className="mt-8 space-y-4">
-        {cartItems && cartItems.length > 0
-          ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
-          : null}
+    <div className="bg-background rounded-lg shadow-sm">
+      <div className="p-4 border-b">
+        <h2 className="text-lg font-extrabold">Filters</h2>
       </div>
-      <div className="mt-8 space-y-4">
-        <div className="flex justify-between">
-          <span className="font-bold">Total</span>
-          <span className="font-bold">${totalCartAmount}</span>
-        </div>
+      <div className="p-4 space-y-4">
+        {Object.keys(filterOptions).map((keyItem) => (
+          <Fragment>
+            <div>
+              <h3 className="text-base font-bold">{keyItem}</h3>
+              <div className="grid gap-2 mt-2">
+                {filterOptions[keyItem].map((option) => (
+                  <Label className="flex font-medium items-center gap-2 ">
+                    <Checkbox
+                      checked={
+                        filters &&
+                        Object.keys(filters).length > 0 &&
+                        filters[keyItem] &&
+                        filters[keyItem].indexOf(option.id) > -1
+                      }
+                      onCheckedChange={() => handleFilter(keyItem, option.id)}
+                    />
+                    {option.label}
+                  </Label>
+                ))}
+              </div>
+            </div>
+            <Separator />
+          </Fragment>
+        ))}
       </div>
-      <Button
-        onClick={() => {
-          navigate("/shop/checkout");
-          setOpenCartSheet(false);
-        }}
-        className="w-full mt-6"
-      >
-        Checkout
-      </Button>
-    </SheetContent>
+    </div>
   );
 }
 
-export default UserCartWrapper;
+export default ProductFilter;
