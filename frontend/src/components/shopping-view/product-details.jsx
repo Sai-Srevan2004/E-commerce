@@ -57,9 +57,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
+        console.log("tttttttttttttttttttttttttt")
         toast({
           title: "Product is added to cart",
         });
+        console.log("toast,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
       }
     });
   }

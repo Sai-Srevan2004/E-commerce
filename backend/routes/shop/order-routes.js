@@ -9,9 +9,12 @@ const {
 
 const router = express.Router();
 
-router.post("/create", createOrder);
-router.post("/capture", capturePayment);
-router.get("/list/:userId", getAllOrdersByUser);
-router.get("/details/:id", getOrderDetails);
+const {authMiddleware,isUser}=require('../../middlewares/auth')
+
+
+router.post("/create",authMiddleware,isUser,createOrder);
+router.post("/capture",authMiddleware,isUser,capturePayment);
+router.get("/list/:userId",authMiddleware,isUser,getAllOrdersByUser);
+router.get("/details/:id",authMiddleware,isUser,getOrderDetails);
 
 module.exports = router;

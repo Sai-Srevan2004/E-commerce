@@ -19,6 +19,7 @@
     "@radix-ui/react-separator": "^1.1.6",
     "@radix-ui/react-slot": "^1.2.2",
     "@radix-ui/react-tabs": "^1.1.11",
+    "@radix-ui/react-toast": "^1.2.13",
     "@reduxjs/toolkit": "^2.7.0",
     "@tailwindcss/vite": "^4.1.6",
     "axios": "^1.9.0",

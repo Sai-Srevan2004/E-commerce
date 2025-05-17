@@ -6,10 +6,12 @@ const {
   updateOrderStatus,
 } = require("../../controllers/admin/order-controller");
 
+const {authMiddleware,isAdmin}=require('../../middlewares/auth')
+
 const router = express.Router();
 
-router.get("/get", getAllOrdersOfAllUsers);
-router.get("/details/:id", getOrderDetailsForAdmin);
-router.put("/update/:id", updateOrderStatus);
+router.get("/get",authMiddleware,isAdmin,getAllOrdersOfAllUsers);
+router.get("/details/:id",authMiddleware,isAdmin,getOrderDetailsForAdmin);
+router.put("/update/:id",authMiddleware,isAdmin,updateOrderStatus);
 
 module.exports = router;

@@ -7,7 +7,10 @@ const {
 
 const router = express.Router();
 
-router.post("/add", addProductReview);
-router.get("/:productId", getProductReviews);
+const {authMiddleware,isUser}=require('../../middlewares/auth')
+
+
+router.post("/add",authMiddleware,isUser,addProductReview);
+router.get("/:productId",authMiddleware,isUser,getProductReviews);
 
 module.exports = router;

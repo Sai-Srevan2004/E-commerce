@@ -10,7 +10,7 @@ export const getFeatureImages = createAsyncThunk(
   "/order/getFeatureImages",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/common/feature/get`
+      `http://localhost:5000/api/common/feature/get`,
     );
 
     return response.data;
@@ -22,7 +22,10 @@ export const addFeatureImage = createAsyncThunk(
   async (image) => {
     const response = await axios.post(
       `http://localhost:5000/api/common/feature/add`,
-      { image }
+      { image },
+      {
+        withCredentials: true,
+      }
     );
 
     return response.data;

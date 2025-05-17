@@ -11,7 +11,10 @@ export const addReview = createAsyncThunk(
   async (formdata) => {
     const response = await axios.post(
       `http://localhost:5000/api/shop/review/add`,
-      formdata
+      formdata,
+      {
+        withCredentials: true,
+      }
     );
 
     return response.data;
@@ -20,7 +23,10 @@ export const addReview = createAsyncThunk(
 
 export const getReviews = createAsyncThunk("/order/getReviews", async (id) => {
   const response = await axios.get(
-    `http://localhost:5000/api/shop/review/${id}`
+    `http://localhost:5000/api/shop/review/${id}`,
+      {
+        withCredentials: true,
+      }
   );
 
   return response.data;

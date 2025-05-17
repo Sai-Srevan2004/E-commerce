@@ -5,9 +5,12 @@ const {
   getFeatureImages,
 } = require("../../controllers/common/feature-controller");
 
+const {authMiddleware,isAdmin}=require('../../middlewares/auth')
+
+
 const router = express.Router();
 
-router.post("/add", addFeatureImage);
-router.get("/get", getFeatureImages);
+router.post("/add",authMiddleware,isAdmin,addFeatureImage);
+router.get("/get",getFeatureImages);
 
 module.exports = router;
