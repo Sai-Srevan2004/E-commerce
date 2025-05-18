@@ -1,6 +1,7 @@
 
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { useToast } from "../../../components/ui/use-toast";
 
 const initialState = {
   cartItems: [],
@@ -89,7 +90,6 @@ const shoppingCartSlice = createSlice({
       })
       .addCase(addToCart.rejected, (state) => {
         state.isLoading = false;
-        state.cartItems = [];
       })
       .addCase(fetchCartItems.pending, (state) => {
         state.isLoading = true;

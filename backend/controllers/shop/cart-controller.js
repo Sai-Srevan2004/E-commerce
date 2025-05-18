@@ -57,7 +57,6 @@ const fetchCartItems = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    console.log(userId,"pppppppp")
 
     if (!userId) {
       return res.status(400).json({

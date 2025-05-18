@@ -59,17 +59,26 @@ function UserCartItemsContent({ cartItem }) {
     });
   }
 
-  function handleCartItemDelete(getCartItem) {
-    dispatch(
+  async function handleCartItemDelete(getCartItem) {
+  try {
+    const payload = await dispatch(
       deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
-    ).then((data) => {
-      if (data?.payload?.success) {
-        toast({
-          title: "Cart item is deleted successfully",
-        });
-      }
+    ).unwrap();
+
+    if (payload.success) {
+      toast({
+        title: "Cart item is deleted successfully",
+      });
+    }
+  } catch (error) {
+    toast({
+      title: "Failed to delete cart item",
+      status: "error",
+      description: error.message || "Please try again later",
     });
   }
+}
+
 
   return (
     <div className="flex items-center space-x-4">
