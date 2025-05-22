@@ -3,14 +3,17 @@ import ShoppingHeader from "./header";
 
 function ShoppingLayout() {
   return (
-    <div className="flex flex-col bg-white overflow-hidden">
-      {/* common header */}
+    <div className="min-h-screen flex flex-col bg-white w-screen">
+      {/* Sticky header */}
       <ShoppingHeader />
-      <main className="flex flex-col w-full">
+
+      {/* Scrollable content area */}
+      <main className="flex-1 w-full overflow-y-auto">
         <Outlet />
       </main>
     </div>
   );
 }
+
 
 export default ShoppingLayout;

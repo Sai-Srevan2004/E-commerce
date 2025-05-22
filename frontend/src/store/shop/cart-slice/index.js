@@ -1,7 +1,6 @@
 
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { useToast } from "../../../components/ui/use-toast";
 
 const initialState = {
   cartItems: [],
@@ -49,9 +48,6 @@ export const deleteCartItem = createAsyncThunk(
         withCredentials: true,
       }
     );
-
-
-
     return response.data;
   }
 );

@@ -20,6 +20,8 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
+import SpinnerLoader from "./components/common/Loader";
+import './index.css'
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -31,12 +33,12 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  if (isLoading) return <h1>Loading...</h1>;
+  if (isLoading) return  <SpinnerLoader/>;
 
   console.log(isLoading, user);
 
   return (
-    <div className="flex flex-col overflow-hidden bg-white">
+    <div className="flex flex-col bg-white">
       <Routes>
         <Route
           path="/"

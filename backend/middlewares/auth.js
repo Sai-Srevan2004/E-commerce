@@ -5,27 +5,42 @@ const User = require("../models/User");
 // Configuring dotenv to load environment variables from .env file
 dotenv.config();
 
-// This function is used as middleware to authenticate user requests
-//auth middleware
 exports.authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
-  if (!token)
+
+  if (!token) {
     return res.status(401).json({
       success: false,
       message: "You are not Authenticated!",
     });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Your session has expired. Please log in again.",
+      });
+    }
+
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token. Please try logging in again.",
+      });
+    }
+
+    return res.status(500).json({
       success: false,
-      message: "You are not Authenticated!",
+      message: "Something went wrong with authentication.",
     });
   }
 };
+
 
 exports.isUser = async (req, res, next) => {
 	try {

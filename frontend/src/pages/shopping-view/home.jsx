@@ -46,6 +46,7 @@ const brandsWithIcon = [
   { id: "h&m", label: "H&M", icon: Heater },
 ];
 function ShoppingHome() {
+  const [latestProducts,setLatestProducts]=useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
@@ -55,6 +56,13 @@ function ShoppingHome() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+  if (productList && productList.length > 0) {
+    setLatestProducts(productList.slice(0, 10));
+  }
+}, [productList]);
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -117,6 +125,9 @@ function ShoppingHome() {
   useEffect(() => {
     dispatch(getFeatureImages());
   }, [dispatch]);
+
+
+  
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -204,11 +215,11 @@ function ShoppingHome() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
-            Feature Products
+            Latest Products
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {productList && productList.length > 0
-              ? productList.map((productItem,i) => (
+            {latestProducts && latestProducts.length > 0
+              ? latestProducts.map((productItem,i) => (
                   <ShoppingProductTile key={i}
                     handleGetProductDetails={handleGetProductDetails}
                     product={productItem}

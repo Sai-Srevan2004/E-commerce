@@ -12,7 +12,7 @@ export const addNewProduct = createAsyncThunk(
     const result = await axios.post(
       "http://localhost:5000/api/admin/products/add",
       formData,
-      {
+      { withCredentials:true,
         headers: {
           "Content-Type": "application/json",
         },
@@ -27,7 +27,10 @@ export const fetchAllProducts = createAsyncThunk(
   "/products/fetchAllProducts",
   async () => {
     const result = await axios.get(
-      "http://localhost:5000/api/admin/products/get"
+      "http://localhost:5000/api/admin/products/get",
+       {
+        withCredentials:true
+       }
     );
 
     return result?.data;
