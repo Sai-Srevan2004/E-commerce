@@ -24,29 +24,76 @@ import { useEffect, useState } from "react";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
 
+// function MenuItems() {
+//   const navigate = useNavigate();
+//   const location = useLocation();
+//   const [searchParams, setSearchParams] = useSearchParams();
+
+//   function handleNavigate(getCurrentMenuItem) {
+//     sessionStorage.removeItem("filters");
+//     const currentFilter =
+//       getCurrentMenuItem.id !== "home" &&
+//       getCurrentMenuItem.id !== "products" &&
+//       getCurrentMenuItem.id !== "search"
+//         ? {
+//             category: [getCurrentMenuItem.id],
+//           }
+//         : null;
+
+//     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+
+//     location.pathname.includes("listing") && currentFilter !== null
+//       ? setSearchParams(
+//           new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
+//         )
+//       : navigate(getCurrentMenuItem.path);
+//   }
+
+//   return (
+//     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
+//       {shoppingViewHeaderMenuItems.map((menuItem) => (
+//         <Label
+//           onClick={() => handleNavigate(menuItem)}
+//           className="text-sm font-medium cursor-pointer"
+//           key={menuItem.id}
+//         >
+//           {menuItem.label}
+//         </Label>
+//       ))}
+//     </nav>
+//   );
+// }
+
 function MenuItems() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   function handleNavigate(getCurrentMenuItem) {
-    sessionStorage.removeItem("filters");
-    const currentFilter =
+    // Category navigation
+    if (
       getCurrentMenuItem.id !== "home" &&
       getCurrentMenuItem.id !== "products" &&
       getCurrentMenuItem.id !== "search"
-        ? {
-            category: [getCurrentMenuItem.id],
-          }
-        : null;
-
-    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-
-    location.pathname.includes("listing") && currentFilter !== null
-      ? setSearchParams(
-          new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
-        )
-      : navigate(getCurrentMenuItem.path);
+    ) {
+      // Always update URL with category param
+      navigate(`/shop/listing?category=${getCurrentMenuItem.id}`);
+      // Optional: update sessionStorage for persistence (not source of truth)
+      sessionStorage.setItem(
+        "filters",
+        JSON.stringify({ category: [getCurrentMenuItem.id] })
+      );
+    }
+    // "Products" navigation (show all products)
+    else if (getCurrentMenuItem.id === "products") {
+      sessionStorage.removeItem("filters");
+      navigate("/shop/listing");
+    }
+    // Other navigation (home, search, etc)
+    else {
+      sessionStorage.removeItem("filters");
+      navigate(getCurrentMenuItem.path);
+    }
   }
 
   return (
@@ -64,6 +111,7 @@ function MenuItems() {
   );
 }
 
+
 function HeaderRightContent() {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -79,7 +127,6 @@ function HeaderRightContent() {
     dispatch(fetchCartItems(user?.id));
   }, [dispatch,user?.id]);
 
-  console.log(cartItems, "sangam");
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
@@ -133,7 +180,6 @@ function HeaderRightContent() {
 }
 
 function ShoppingHeader() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
     <header className="sticky top-0 z-40 w-screen border-b bg-background">

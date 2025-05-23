@@ -83,6 +83,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         reviewValue: rating,
       })
     ).then((data) => {
+      console.log(data,"----------------------")
       if (data.payload.success) {
         setRating(0);
         setReviewMsg("");
@@ -91,12 +92,21 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           title: "Review added successfully!",
         });
       }
+       else{
+        setRating(0);
+        setReviewMsg("");
+        toast({
+          title:"Error",
+          description:data.payload.message || "Something went wrong while submitting the review.",
+          variant: "destructive"
+        });
+      }
     });
   }
 
   useEffect(() => {
     if (productDetails !== null) dispatch(getReviews(productDetails?._id));
-  }, [productDetails]);
+  }, [productDetails,dispatch]);
 
   console.log(reviews, "reviews");
 

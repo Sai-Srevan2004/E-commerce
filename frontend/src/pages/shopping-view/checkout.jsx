@@ -140,6 +140,7 @@ function ShoppingCheckout() {
                 });
               }
             } catch (error) {
+              console.log(error)
               toast({
                 title: "Payment verification error occurred.",
                 variant: "destructive",

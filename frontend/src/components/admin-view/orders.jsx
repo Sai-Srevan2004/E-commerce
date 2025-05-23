@@ -21,13 +21,13 @@ import { Badge } from "../ui/badge";
 
 function AdminOrdersView() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  // const [selectedOrderId, setSelectedOrderId] = useState(null);
   const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
 
   function handleFetchOrderDetails(getId) {
     dispatch(getOrderDetailsForAdmin(getId));
-    setSelectedOrderId(getId);
+    // setSelectedOrderId(getId);
     setOpenDetailsDialog(true);
   }
 
@@ -39,7 +39,7 @@ function AdminOrdersView() {
   useEffect(() => {
     if (orderDetails === null) {
       setOpenDetailsDialog(false);
-      setSelectedOrderId(null);
+      // setSelectedOrderId(null);
     }
   }, [orderDetails]);
 
@@ -111,7 +111,7 @@ function AdminOrdersView() {
         onOpenChange={(open) => {
           setOpenDetailsDialog(open);
           if (!open) {
-            setSelectedOrderId(null);
+            // setSelectedOrderId(null);
             dispatch(resetOrderDetails());
           }
         }}
