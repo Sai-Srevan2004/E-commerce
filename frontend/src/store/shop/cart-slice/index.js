@@ -11,7 +11,7 @@ export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ userId, productId, quantity }) => {
     const response = await axios.post(
-      "http://localhost:5000/api/shop/cart/add",
+      `${import.meta.env.VITE_BACKEND_URI}/shop/cart/add`,
       {
         userId,
         productId,
@@ -30,7 +30,7 @@ export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/cart/get/${userId}`,
+      `${import.meta.env.VITE_BACKEND_URI}/shop/cart/get/${userId}`,
       {
         withCredentials: true,
       }
@@ -43,7 +43,7 @@ export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
   async ({ userId, productId }) => {
     const response = await axios.delete(
-      `http://localhost:5000/api/shop/cart/${userId}/${productId}`,
+      `${import.meta.env.VITE_BACKEND_URI}/shop/cart/${userId}/${productId}`,
       {
         withCredentials: true,
       }
@@ -56,7 +56,7 @@ export const updateCartQuantity = createAsyncThunk(
   "cart/updateCartQuantity",
   async ({ userId, productId, quantity }) => {
     const response = await axios.put(
-      "http://localhost:5000/api/shop/cart/update-cart",
+      `${import.meta.env.VITE_BACKEND_URI}/shop/cart/update-cart`,
       {
         userId,
         productId,

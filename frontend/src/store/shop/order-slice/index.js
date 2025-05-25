@@ -17,7 +17,7 @@ export const initiateRazorpayOrder = createAsyncThunk(
   "/order/initiateRazorpayOrder",
   async (orderData) => {
     const response = await axios.post(
-      "http://localhost:5000/api/shop/order/create",
+      `${import.meta.env.VITE_BACKEND_URI}/shop/order/create`,
       orderData,
       {
         withCredentials: true,
@@ -32,7 +32,7 @@ export const capturePayment = createAsyncThunk(
   "/order/capturePayment",
   async ({ paymentId,orderId,razorpaySignature,razorpayOrderId }) => {
     const response = await axios.post(
-      "http://localhost:5000/api/shop/order/capture",
+      `${import.meta.env.VITE_BACKEND_URI}/shop/order/capture`,
       {
         razorpayPaymentId:paymentId,
         orderId,razorpaySignature,razorpayOrderId
@@ -49,7 +49,7 @@ export const getAllOrdersByUserId = createAsyncThunk(
   "/order/getAllOrdersByUserId",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/list/${userId}`,
+      `${import.meta.env.VITE_BACKEND_URI}/shop/order/list/${userId}`,
       {
         withCredentials: true,
       }
@@ -62,7 +62,7 @@ export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/details/${id}`,
+      `${import.meta.env.VITE_BACKEND_URI}/shop/order/details/${id}`,
       {
         withCredentials: true,
       }
