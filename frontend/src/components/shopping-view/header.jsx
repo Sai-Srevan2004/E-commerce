@@ -35,20 +35,13 @@ function MenuItems() {
     ) {
       // Always update URL with category param
       navigate(`/shop/listing?category=${getCurrentMenuItem.id}`);
-      // Optional: update sessionStorage for persistence (not source of truth)
-      sessionStorage.setItem(
-        "filters",
-        JSON.stringify({ category: [getCurrentMenuItem.id] })
-      );
     }
     // "Products" navigation (show all products)
     else if (getCurrentMenuItem.id === "products") {
-      sessionStorage.removeItem("filters");
       navigate("/shop/listing");
     }
     // Other navigation (home, search, etc)
     else {
-      sessionStorage.removeItem("filters");
       navigate(getCurrentMenuItem.path);
     }
   }

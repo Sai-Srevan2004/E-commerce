@@ -26,7 +26,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "https://saisrevan-ecommerce.vercel.app",
+    origin: `${process.env.NODE_ENV==="production"?"":"http://localhost:5173"}`,
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
@@ -38,12 +38,6 @@ app.use(
     credentials: true,
   })
 );
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-
 
 app.use(cookieParser());
 app.use(express.json());

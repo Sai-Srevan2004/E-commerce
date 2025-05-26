@@ -1,3 +1,6 @@
+
+
+
 import ProductFilter from "@/components/shopping-view/filter";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
@@ -10,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import { sortOptions } from "@/config";
+import { sortOptions, filterOptions } from "@/config"; // <-- import filterOptions here!
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import {
   fetchAllFilteredProducts,
@@ -46,25 +49,15 @@ function ShoppingListing() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-
-  console.log(searchParams.get('category'),"pppppppppp")
-
   // --- URL IS SOURCE OF TRUTH FOR FILTERS ---
-  // Read filters from URL
-  const categorySearchParam = searchParams.get("category");
+  // Read filters from URL for all filter sections (category, brand, etc.)
   const filters = {};
-  if (categorySearchParam) {
-    filters.category = categorySearchParam.split(",");
-  }
-
-  // Persist filters in sessionStorage (optional, not source of truth)
-  useEffect(() => {
-    if (Object.keys(filters).length > 0) {
-      sessionStorage.setItem("filters", JSON.stringify(filters));
-    } else {
-      sessionStorage.removeItem("filters");
+  Object.keys(filterOptions).forEach((key) => {
+    const param = searchParams.get(key);
+    if (param) {
+      filters[key] = param.split(",");
     }
-  }, [categorySearchParam]);
+  });
 
   // When filters change (from filter sidebar), update URL
   function handleFilter(getSectionId, getCurrentOption) {
@@ -72,6 +65,8 @@ function ShoppingListing() {
     if (!cpyFilters[getSectionId]) {
       cpyFilters[getSectionId] = [getCurrentOption];
     } else {
+      // clone the array before mutating
+      cpyFilters[getSectionId] = [...cpyFilters[getSectionId]];
       const idx = cpyFilters[getSectionId].indexOf(getCurrentOption);
       if (idx === -1) {
         cpyFilters[getSectionId].push(getCurrentOption);
@@ -79,18 +74,13 @@ function ShoppingListing() {
         cpyFilters[getSectionId].splice(idx, 1);
       }
     }
+
     // Remove empty filters
     Object.keys(cpyFilters).forEach((key) => {
       if (cpyFilters[key].length === 0) delete cpyFilters[key];
     });
     const queryString = createSearchParamsHelper(cpyFilters);
     setSearchParams(new URLSearchParams(queryString));
-    // Optional: persist to sessionStorage
-    if (Object.keys(cpyFilters).length > 0) {
-      sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
-    } else {
-      sessionStorage.removeItem("filters");
-    }
   }
 
   function handleSort(value) {
@@ -144,7 +134,7 @@ function ShoppingListing() {
         })
       );
     }
-  }, [dispatch, sort, categorySearchParam]);
+  }, [dispatch, sort, searchParams.toString()]); // depend on all searchParams
 
   useEffect(() => {
     if (productDetails !== null) setOpenDetailsDialog(true);
@@ -189,13 +179,13 @@ function ShoppingListing() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {productList && productList.length > 0
             ? productList.map((productItem) => (
-                <ShoppingProductTile
-                  key={productItem.id}
-                  handleGetProductDetails={handleGetProductDetails}
-                  product={productItem}
-                  handleAddtoCart={handleAddtoCart}
-                />
-              ))
+              <ShoppingProductTile
+                key={productItem.id}
+                handleGetProductDetails={handleGetProductDetails}
+                product={productItem}
+                handleAddtoCart={handleAddtoCart}
+              />
+            ))
             : null}
         </div>
       </div>
@@ -205,7 +195,8 @@ function ShoppingListing() {
         productDetails={productDetails}
       />
     </div>
-  )
+  );
 }
 
 export default ShoppingListing;
+
