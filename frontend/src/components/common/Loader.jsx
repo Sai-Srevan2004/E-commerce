@@ -1,12 +1,11 @@
-
 import React from 'react';
 
-const SpinnerLoader = () => {
+const Loader = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+    <div className="flex justify-center items-center h-40">
+      <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
     </div>
   );
 };
 
-export default SpinnerLoader;
+export default Loader;

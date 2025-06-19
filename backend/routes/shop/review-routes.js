@@ -11,6 +11,6 @@ const {authMiddleware,isUser}=require('../../middlewares/auth')
 
 
 router.post("/add",authMiddleware,isUser,addProductReview);
-router.get("/:productId",authMiddleware,isUser,getProductReviews);
+router.get("/:productId",getProductReviews);
 
 module.exports = router;

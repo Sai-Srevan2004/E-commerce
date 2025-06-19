@@ -1,6 +1,7 @@
 const Product = require("../../models/Product");
 
 const getFilteredProducts = async (req, res) => {
+   console.log(req.query,"----------------")
   try {
     const { category = [], brand = [], sortBy = "price-lowtohigh" } = req.query;
 
@@ -47,7 +48,7 @@ const getFilteredProducts = async (req, res) => {
       data: products,
     });
   } catch (e) {
-    console.log(error);
+    console.log(e);
     res.status(500).json({
       success: false,
       message: "Some error occured",

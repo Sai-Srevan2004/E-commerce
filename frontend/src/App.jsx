@@ -1,69 +1,95 @@
-import { Route, Routes } from "react-router-dom";
-import AuthLayout from "./components/auth/layout";
-import AuthLogin from "./pages/auth/login";
-import AuthRegister from "./pages/auth/register";
-import AdminLayout from "./components/admin-view/layout";
-import AdminDashboard from "./pages/admin-view/dashboard";
-import AdminProducts from "./pages/admin-view/products";
-import AdminOrders from "./pages/admin-view/orders";
-import AdminFeatures from "./pages/admin-view/features";
-import ShoppingLayout from "./components/shopping-view/layout";
-import NotFound from './pages/not-Found'
-import ShoppingHome from "./pages/shopping-view/home";
-import ShoppingListing from "./pages/shopping-view/listing";
-import ShoppingCheckout from "./pages/shopping-view/checkout";
-import ShoppingAccount from "./pages/shopping-view/account";
-import CheckAuth from "./components/common/check-auth";
-import UnauthPage from "./pages/unauth-page";
+import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { checkAuth } from "./store/auth-slice";
-import PaymentSuccessPage from "./pages/shopping-view/payment-success";
-import SearchProducts from "./pages/shopping-view/search";
-import SpinnerLoader from "./components/common/Loader";
-import './index.css'
+import { checkAuthh } from "./slices/authSlice";
 
-function App() {
-  const { user, isAuthenticated, isLoading } = useSelector(
+import CheckAuth from "./components/common/CheckAuth";
+import ShopLayout from "./components/shop/ShopLayout";
+import AuthLayout from "./components/auth/AuthLayout";
+
+import HomePage from "./pages/shop/Home";
+import Products from "./pages/shop/Products";
+import Account from "./pages/shop/Account";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import NotFound from "./pages/common/NotFound";
+import PaymentSuccessPage from "./pages/shop/PaymentSuccess";
+import Checkout from "./pages/shop/Checkout";
+import VerifyEmail from "./pages/auth/VerifyEmail";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminFeatures from "./pages/admin/Features";
+import AdminOrders from "./pages/admin/Orders";
+import AdminProducts from "./pages/admin/Products";
+const App = () => {
+  const dispatch = useDispatch();
+  const { user, isAuthenticated, authLoading } = useSelector(
     (state) => state.auth
   );
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(checkAuth());
+    dispatch(checkAuthh());
   }, [dispatch]);
 
-  if (isLoading) return  <SpinnerLoader/>;
-
-  console.log(isLoading, user);
-
   return (
-    <div className="flex flex-col bg-white">
+    <BrowserRouter>
       <Routes>
+        {/* Root redirect */}
         <Route
           path="/"
           element={
             <CheckAuth
               isAuthenticated={isAuthenticated}
               user={user}
-            ></CheckAuth>
+              authLoading={authLoading}
+            />
           }
         />
+
+        {/* Auth Routes */}
         <Route
           path="/auth"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+              authLoading={authLoading}
+            >
               <AuthLayout />
             </CheckAuth>
           }
         >
-          <Route path="login" element={<AuthLogin />} />
-          <Route path="register" element={<AuthRegister />} />
+          <Route index element={<Navigate to="login" replace />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
+          <Route path="verify-email" element={<VerifyEmail />} />
         </Route>
+
+        {/* Shop Routes */}
+        <Route
+          path="/shop"
+          element={
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+              authLoading={authLoading}
+            >
+              <ShopLayout />
+            </CheckAuth>
+          }
+        >
+          <Route index element={<Navigate to="home" replace />} />
+          <Route path="home" element={<HomePage />} />
+          <Route path="products" element={<Products />} />
+          <Route path="account" element={<Account />} />
+          <Route path="payment-success" element={<PaymentSuccessPage />} />
+          <Route path="checkout" element={<Checkout />} />
+        </Route>
+
         <Route
           path="/admin"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth isAuthenticated={isAuthenticated} user={user} authLoading={authLoading}>
               <AdminLayout />
             </CheckAuth>
           }
@@ -73,26 +99,12 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
         </Route>
-        <Route
-          path="/shop"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <ShoppingLayout />
-            </CheckAuth>
-          }
-        >
-          <Route path="home" element={<ShoppingHome />} />
-          <Route path="listing" element={<ShoppingListing />} />
-          <Route path="checkout" element={<ShoppingCheckout />} />
-          <Route path="account" element={<ShoppingAccount />} />
-          <Route path="payment-success" element={<PaymentSuccessPage />} />
-          <Route path="search" element={<SearchProducts />} />
-        </Route>
-        <Route path="/unauth-page" element={<UnauthPage />} />
+
+        {/* Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </div>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
