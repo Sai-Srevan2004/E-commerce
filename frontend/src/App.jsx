@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import AdminFeatures from "./pages/admin/Features";
 import AdminOrders from "./pages/admin/Orders";
 import AdminProducts from "./pages/admin/Products";
+import UnAuthPage from "./pages/auth/UnAuthPage";
 const App = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated, authLoading } = useSelector(
@@ -99,6 +100,8 @@ const App = () => {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
         </Route>
+
+        <Route path="/unauth-page" element={<UnAuthPage/>}/>
 
         {/* Not Found */}
         <Route path="*" element={<NotFound />} />
