@@ -1,203 +1,3 @@
-// import React, { useEffect, useState } from 'react'
-// import { fetchProducts } from '@/slices/productsSlice'
-// import { useDispatch } from 'react-redux'
-// import ProductFilters from '@/components/shop/ProductFilters'
-// import ProductCard from '@/components/shop/ProductCard'
-// import { Separator } from '@/components/ui/separator'
-// import { Button } from '@/components/ui/button'
-// import { ArrowUpDownIcon, Heading1 } from "lucide-react";
-// import { sortOptions } from '@/config'
-// import { useSearchParams } from 'react-router-dom'
-// import { filterOptions } from '@/config'
-// import { useSelector } from 'react-redux'
-// import Loader from '@/components/common/Loader'
-// import { Input } from '@/components/ui/input'
-// import { Search } from 'lucide-react'
-// import { getSearchResults,resetSearchResults } from '@/slices/searchSlice'
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuRadioGroup,
-//   DropdownMenuRadioItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu"
-
-
-// const Products = () => {
-
-//   const loading = useSelector((state) => state.products.isLoading)
-//   const {searchResults}=useSelector((state)=>state.search)
-//   const dispatch = useDispatch()
-//   const [products, setProducts] = useState([])
-//   const [searchParams, setSearchParams] = useSearchParams()
-//   const [sort, setSort] = useState('price-lowtohigh')
-//   const [search, setSearch] = useState('')
-
-
-//   const filters = {};
-//   Object.keys(filterOptions).forEach((key) => {
-//     const param = searchParams.get(key);
-//     if (param) {
-//       filters[key] = param.split(",");
-//     }
-//   });
-
-//   useEffect(() => {
-//     dispatch(fetchProducts({ filterParams: filters, sortParams: sort })).then((action) => {
-//       console.log(action)
-//       if (action.payload.success) {
-//         setProducts(action.payload.data)
-//       }
-//     })
-//   }, [dispatch, searchParams, sort])
-
-//   const handleCheckBoxes = (keyItem, checkBoxValue) => {
-//     const copyFilters = { ...filters };
-
-//     // If key doesn't exist, initialize it
-//     if (!Object.hasOwn(copyFilters, keyItem)) {
-//       copyFilters[keyItem] = [checkBoxValue];
-//     } else {
-//       // Clone the array
-//       copyFilters[keyItem] = [...copyFilters[keyItem]];
-
-//       const idx = copyFilters[keyItem].indexOf(checkBoxValue);
-//       if (idx === -1) {
-//         copyFilters[keyItem].push(checkBoxValue); // Add new
-//       } else {
-//         copyFilters[keyItem].splice(idx, 1); // Remove unchecked
-//       }
-//     }
-
-//     console.log(copyFilters, "Updated filters");
-
-//     Object.keys(copyFilters).forEach((key) => {
-//       if (copyFilters[key].length === 0) delete copyFilters[key];
-//     });
-
-//     const queryString = createSearchParamsHelper(copyFilters);
-//     setSearchParams(new URLSearchParams(queryString.toString()));
-//   };
-
-//   function createSearchParamsHelper(filterParams) {
-//     const queryParams = []; // to store key=value pairs
-
-//     for (const [key, value] of Object.entries(filterParams)) {
-//       // If it's a non-empty array:
-//       if (Array.isArray(value) && value.length > 0) {
-//         const paramValue = value.join(","); // join array into comma-separated string
-//         queryParams.push(`${key}=${encodeURIComponent(paramValue)}`); // encode and add
-//       }
-//     }
-//     return queryParams.join("&"); // return final query string
-
-//   }
-
-//   const handleSearchValue = (e) => {
-//     setSearch(e.target.value)
-//   }
-
-//   useEffect(() => {
-//     const searchKeyword = search.trim();
-
-//     let timer
-
-//     if (searchKeyword.length > 3) {
-//         timer = setTimeout(() => {
-//             setSearchParams(new URLSearchParams(`?keyword=${searchKeyword}`));
-//             dispatch(getSearchResults(searchKeyword))
-//       }, 600)
-//     }
-//     else{
-//        setSearchParams(new URLSearchParams(`?keyword=${searchKeyword}`));
-//       dispatch(resetSearchResults());
-//     }
-
-//     return ()=>{
-//       clearTimeout(timer)
-//     }
-//   }, [search,searchParams,dispatch])
-
-
-//    useEffect(() => {
-//     const urlKeyword = searchParams.get("keyword") || "";
-//     setSearch(urlKeyword);
-//     // Optionally, trigger a search if the URL already has a keyword
-//     if (urlKeyword && urlKeyword.trim().length > 3) {
-//       dispatch(getSearchResults(urlKeyword));
-//     }
-//   }, [dispatch,setSearchParams,searchParams]); // Run once on mount
-
-
-
-//   return (
-//     <div className='flex justify-around px-4 pt-4 gap-6'>
-//       {/* Filters */}
-//       <div className='flex flex-col gap-[10px] min-w-[200px] sticky top-0'>
-//         <h1 className='font-bold text-black'>Filters</h1>
-//         <Separator />
-//         <ProductFilters handleCheckBoxes={handleCheckBoxes} filters={filters} />
-//       </div>
-
-//       {/* Products */}
-//       <div className='flex-1'>
-//         <div className='flex justify-between mb-2'>
-//           <h1 className='text-2xl font-bold text-black'>All Products</h1>
-//           <div className='flex items-center justify-center relative min-w-[50%]'>
-//             <Input onChange={handleSearchValue} value={search} type="text" placeholder="seacrh for products..." />
-//             <span className='absolute right-1'><Search /></span>
-//           </div>
-//           <div className='flex items-center justify-center gap-2'>
-//             <p className='text-gray-400'>{products.length} products</p>
-//             <DropdownMenu>
-//               <DropdownMenuTrigger asChild >
-//                 <Button variant='outline'>
-//                   <span>Sort By</span>
-//                   <ArrowUpDownIcon />
-//                 </Button>
-//               </DropdownMenuTrigger>
-//               <DropdownMenuContent align="end">
-//                 <DropdownMenuLabel>Sort Products</DropdownMenuLabel>
-//                 <DropdownMenuSeparator />
-//                 <DropdownMenuRadioGroup value={sort} onValueChange={setSort}>
-//                   {sortOptions.map((sortItem) => (
-//                     <DropdownMenuRadioItem
-//                       value={sortItem.id}
-//                       key={sortItem.id}
-//                     >
-//                       {sortItem.label}
-//                     </DropdownMenuRadioItem>
-//                   ))}
-//                 </DropdownMenuRadioGroup>
-//               </DropdownMenuContent>
-//             </DropdownMenu>
-//           </div>
-//         </div>
-//         <Separator />
-//         <div className="grid grid-cols-4 gap-x-4 gap-y-6 mt-3 mb-3 min-h-[300px]">
-//           {
-//             loading
-//               ? <div className="col-span-4 flex justify-center items-center h-100">
-//                 <Loader />
-//               </div>
-//               : products.map((item, i) => (
-//                 <ProductCard item={item} key={i} />
-//               ))
-//           }
-//         </div>
-
-//       </div>
-//     </div>
-//   )
-
-// }
-
-// export default Products
-
-
 import React, { useEffect, useState,useRef } from 'react'
 import { fetchProducts } from '@/slices/productsSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -410,9 +210,9 @@ useEffect(() => {
 
 
   return (
-    <div className='flex justify-around px-4 pt-4 gap-6'>
+<div className="flex flex-col md:flex-row md:justify-around px-4 pt-4 gap-6">
       {/* Filters */}
-      <div className='flex flex-col gap-[10px] min-w-[200px] sticky top-0'>
+      <div className='flex flex-col gap-[10px] min-w-[200px] top-0'>
         <h1 className='font-bold text-black'>Filters</h1>
         <Separator />
         <ProductFilters handleCheckBoxes={handleCheckBoxes} filters={filters} />
@@ -420,7 +220,7 @@ useEffect(() => {
 
       {/* Products */}
       <div className='flex-1'>
-        <div className='flex justify-between mb-2'>
+        <div className='flex flex-col items-start gap-5 sm:flex-row sm:justify-between mb-2'>
           <h1 className='text-2xl font-bold text-black'>All Products</h1>
           <div className='flex items-center justify-center relative min-w-[50%]'>
             <Input
@@ -458,7 +258,7 @@ useEffect(() => {
           </div>
         </div>
         <Separator />
-        <div className="grid grid-cols-4 gap-x-4 gap-y-6 mt-3 mb-3 min-h-[300px]">
+        <div className="grid grid-cols-1 nineten:grid-cols-2 onezeroeightzero:grid-cols-3 desktop:grid-cols-4 gap-4 m-2 min-h-[300px]">
           {loading ? (
             <div className="col-span-4 flex justify-center items-center h-100">
               <Loader />

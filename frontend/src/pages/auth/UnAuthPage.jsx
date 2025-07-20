@@ -1,7 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const UnAuthPage = () => {
+
+   const { user } = useSelector(
+      (state) => state.auth
+    );
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
       <h1 className="text-5xl font-bold text-yellow-500">403</h1>
@@ -9,12 +15,20 @@ const UnAuthPage = () => {
       <p className="text-gray-500 mt-2 text-center max-w-md">
         You don't have permission to access this page. Please go back to a valid section of the website.
       </p>
-      <Link
+      {
+        user?.role==='user'?<Link
         to="/shop/home"
         className="mt-6 inline-block bg-black hover:bg-gray-800 text-white font-semibold px-6 py-3 rounded-lg transition"
       >
         Return to Homepage
+      </Link>:
+       <Link
+        to="/admin/dashboard"
+        className="mt-6 inline-block bg-black hover:bg-gray-800 text-white font-semibold px-6 py-3 rounded-lg transition"
+      >
+        Return to Dashboard
       </Link>
+      }
     </div>
   );
 };

@@ -28,6 +28,8 @@ const App = () => {
     (state) => state.auth
   );
 
+  console.log(user,"oooooooooooooooooooooo")
+
   useEffect(() => {
     dispatch(checkAuthh());
   }, [dispatch]);

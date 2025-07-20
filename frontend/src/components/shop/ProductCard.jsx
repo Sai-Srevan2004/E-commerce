@@ -13,7 +13,7 @@ import { Button } from '../ui/button'
 
 const ProductCard = ({ item,handleAddtoCart,handleGetProductDetails }) => {
     return (
-        <div className='w-[300px]'>
+        <div className='w-[80%] sm:w-[90%] onezeroeightzero:w-[300px] '>
             <Card className="p-0">
                 <div onClick={() => handleGetProductDetails(item?._id)}>
                     <div className='relative'>

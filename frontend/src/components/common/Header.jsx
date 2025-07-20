@@ -2,7 +2,7 @@ import React from 'react';
 import { NavBar } from '../../config';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate,Link } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -122,9 +122,13 @@ const Header = () => {
   return (
     <div className="flex items-center px-5 py-3">
       {/* Left: Logo */}
+     
       <div className="flex-1">
+         <Link to='/shop/home'>
         <h2 className="text-2xl font-bold">E-Commerce</h2>
+        </Link>
       </div>
+
 
       {/* Center: Navbar items */}
       <div className="flex-1 hidden lg:flex justify-center">
@@ -132,7 +136,7 @@ const Header = () => {
       </div>
 
       {/* Right: Cart & Login/User */}
-      <div className="flex-1 flex justify-end items-center">
+      <div className="hidden lg:flex-1 lg:flex lg:justify-end lg:items-center">
         <HeaderRight />
       </div>
 

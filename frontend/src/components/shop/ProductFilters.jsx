@@ -8,10 +8,10 @@ const ProductFilters = ({handleCheckBoxes,filters}) => {
   console.log(filters,"fileres")
   return (
     <div className='flex flex-col gap-1.5'>
-        <div className='flex flex-col gap-3.5'>
+        <div className='flex flex-col gap-7 md:gap-3.5'>
          {
           Object.keys(filterOptions).map((keyItem)=>{
-             return <div className='flex gap-3 flex-col' key={keyItem}>
+             return <div className='flex flex-wrap gap-3 flex-row md:flex-col' key={keyItem}>
                 <h1 className='text-base font-bold'>{keyItem}</h1>
                 {
                   filterOptions[keyItem].map((item,i)=>{
@@ -25,7 +25,7 @@ const ProductFilters = ({handleCheckBoxes,filters}) => {
                     </Label>
                   })
                 }
-                <Separator/>
+                <Separator className={'hidden md:block'}/>
              </div>
           })
          }

@@ -119,6 +119,16 @@
   }
 }
 
+
+
+@theme {
+  --breakpoint-desktop: 1286px;
+  --breakpoint-onezeroeightzero: 1080px;
+  --breakpoint-nineten: 910px;  
+}
+
 body {
   overflow: auto;
 }
+
+
