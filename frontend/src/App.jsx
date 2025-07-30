@@ -10,7 +10,7 @@ import AuthLayout from "./components/auth/AuthLayout";
 import HomePage from "./pages/shop/Home";
 import Products from "./pages/shop/Products";
 import Account from "./pages/shop/Account";
-import Login from "./pages/auth/Login";
+import Login from "./pages/auth/Login.jsx";
 import Signup from "./pages/auth/Signup";
 import NotFound from "./pages/common/NotFound";
 import PaymentSuccessPage from "./pages/shop/PaymentSuccess";
