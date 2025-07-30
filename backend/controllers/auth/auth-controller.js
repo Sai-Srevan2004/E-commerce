@@ -5,6 +5,7 @@ require("dotenv").config();
 const Otp = require("../../models/Otp");
 const mailSender = require("../../helpers/mailSender");
 const crypto = require("crypto"); 
+const {a}=require('../../File')
 
 // --- Send OTP ---
 const sendOtp = async (req, res) => {
@@ -26,7 +27,7 @@ const sendOtp = async (req, res) => {
       });
     }
 
-    // ✅ Generate a cryptographically secure 6-digit OTP
+    // Generate a cryptographically secure 6-digit OTP
     const otp = crypto.randomInt(100000, 1000000).toString();
 
     // Send OTP via email
@@ -138,8 +139,8 @@ const loginUser = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Strict",
+      secure: a,
+      sameSite: `${a?"None":"Strict"}`,
       maxAge: 30 * 60 * 1000,
     }).json({
       success: true,
