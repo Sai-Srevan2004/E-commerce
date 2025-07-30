@@ -4,7 +4,7 @@ const User = require("../../models/User");
 require("dotenv").config();
 const Otp = require("../../models/Otp");
 const mailSender = require("../../helpers/mailSender");
-const crypto = require("crypto"); // ✅ Secure random number generator
+const crypto = require("crypto"); 
 
 // --- Send OTP ---
 const sendOtp = async (req, res) => {
@@ -26,7 +26,7 @@ const sendOtp = async (req, res) => {
       });
     }
 
-    // ✅ Generate a cryptographically secure 6-digit OTP
+    // Generate a cryptographically secure 6-digit OTP
     const otp = crypto.randomInt(100000, 1000000).toString();
 
     // Send OTP via email
@@ -136,11 +136,14 @@ const loginUser = async (req, res) => {
       { expiresIn: "30m" }
     );
 
+    // Determine if in production or development
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Strict",
-      maxAge: 30 * 60 * 1000,
+      secure: isProduction, // Secure cookie in production (requires HTTPS)
+      sameSite: isProduction ? "None" : "Strict", // None if prod (for cross-site), Strict if dev
+      maxAge: 30 * 60 * 1000, // 30 minutes
     }).json({
       success: true,
       message: "Logged in successfully",
