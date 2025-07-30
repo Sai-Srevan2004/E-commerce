@@ -5,7 +5,6 @@ require("dotenv").config();
 const Otp = require("../../models/Otp");
 const mailSender = require("../../helpers/mailSender");
 const crypto = require("crypto"); 
-const {a}=require('../../File')
 
 // --- Send OTP ---
 const sendOtp = async (req, res) => {
@@ -139,8 +138,8 @@ const loginUser = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: a,
-      sameSite: `${a?"None":"Strict"}`,
+      secure: true,
+      sameSite: `${true?"None":"Strict"}`,
       maxAge: 30 * 60 * 1000,
     }).json({
       success: true,
