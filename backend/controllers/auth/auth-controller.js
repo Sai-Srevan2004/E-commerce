@@ -26,7 +26,7 @@ const sendOtp = async (req, res) => {
       });
     }
 
-    // Generate a cryptographically secure 6-digit OTP
+    // ✅ Generate a cryptographically secure 6-digit OTP
     const otp = crypto.randomInt(100000, 1000000).toString();
 
     // Send OTP via email
@@ -136,14 +136,11 @@ const loginUser = async (req, res) => {
       { expiresIn: "30m" }
     );
 
-    // Determine if in production or development
-    const isProduction = process.env.NODE_ENV === "production";
-
     res.cookie("token", token, {
       httpOnly: true,
-      secure: isProduction, // Secure cookie in production (requires HTTPS)
-      sameSite: isProduction ? "None" : "Strict", // None if prod (for cross-site), Strict if dev
-      maxAge: 30 * 60 * 1000, // 30 minutes
+      secure: false,
+      sameSite: "Strict",
+      maxAge: 30 * 60 * 1000,
     }).json({
       success: true,
       message: "Logged in successfully",
