@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function Login() {
+function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -51,7 +51,7 @@ function Login() {
         onSubmit={onSubmit}
       />
 
-      {/* 🔵 New Button to Navigate to Home */}
+      {/*New Button to Navigate to Home */}
       <div className="flex justify-center">
         <button
           type="button"
@@ -65,4 +65,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;

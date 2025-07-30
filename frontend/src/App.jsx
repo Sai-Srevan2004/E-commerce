@@ -10,7 +10,7 @@ import AuthLayout from "./components/auth/AuthLayout";
 import HomePage from "./pages/shop/Home";
 import Products from "./pages/shop/Products";
 import Account from "./pages/shop/Account";
-import Login from "./pages/auth/Login.jsx";
+import LoginPage from "./pages/auth/LoginPage";
 import Signup from "./pages/auth/Signup";
 import NotFound from "./pages/common/NotFound";
 import PaymentSuccessPage from "./pages/shop/PaymentSuccess";
@@ -63,7 +63,7 @@ const App = () => {
           }
         >
           <Route index element={<Navigate to="login" replace />} />
-          <Route path="login" element={<Login />} />
+          <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<Signup />} />
           <Route path="verify-email" element={<VerifyEmail />} />
         </Route>
