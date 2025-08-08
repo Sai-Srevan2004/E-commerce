@@ -18,6 +18,7 @@ import { fetchCartItems } from '@/slices/cartSlice';
 import { logoutUser } from '@/slices/authSlice';
 import UserCartWrapper from '../shop/useCartWrapper';
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import Logo from '../../../public/Logo.png'
 
 // MenuItems Component
 const MenuItems = () => {
@@ -125,7 +126,7 @@ const Header = () => {
      
       <div className="flex-1">
          <Link to='/shop/home'>
-        <h2 className="text-2xl font-bold">E-Commerce</h2>
+        <div className="flex"><img height={50} width={50} src={Logo} /><h1 className='text-2xl font-bold'>E-Commerce</h1></div>
         </Link>
       </div>
 
