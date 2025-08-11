@@ -2,6 +2,7 @@ import { Minus, Plus, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, updateCartQuantity } from "../../slices/cartSlice";
+import toast from "react-hot-toast";
 
 function UserCartItemsContent({ cartItem }) {
   const { user } = useSelector((state) => state.auth);
@@ -30,8 +31,7 @@ function UserCartItemsContent({ cartItem }) {
         if (indexOfCurrentCartItem > -1) {
           const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
           if (getQuantity + 1 > getTotalStock) {
-            alert(`Only ${getQuantity} quantity can be added for this item`,
-             );
+            toast.error(`Only ${getQuantity} quantity can be added for this item`)
 
             return;
           }
@@ -50,8 +50,7 @@ function UserCartItemsContent({ cartItem }) {
       })
     ).then((data) => {
       if (data?.payload?.success) {
-        alert( "Cart item is updated successfully",
-        );
+        toast.success("Cart item is updated successfully")
       }
     });
   }
@@ -63,14 +62,10 @@ function UserCartItemsContent({ cartItem }) {
     ).unwrap();
 
     if (payload.success) {
-      alert(
-        "Cart item is deleted successfully",
-      );
+      toast.success("Cart item is deleted successfully")
     }
   } catch (error) {
-    alert(
-      `Failed to delete cart item${error}`
-    );
+    toast.error(`Failed to delete cart item${error}`)
   }
 }
 

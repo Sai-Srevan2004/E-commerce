@@ -6,6 +6,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { sendOtp, setSignupData } from "@/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import Loader from "@/components/common/Loader";
+import toast from "react-hot-toast";
 
 const initialState = {
   userName: "",
@@ -29,11 +30,11 @@ function SignUp() {
       
       if(action.payload.success)
       { 
-           alert(action.payload.message)
+           toast.success(action.payload.message)
            navigate('/auth/verify-email')
       }
       else{
-        alert(action.payload.message)
+        toast.error(action.payload.message)
       }
     })
   }

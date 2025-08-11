@@ -11,6 +11,7 @@ import { Label } from "../ui/label";
 import StarRatingComponent from "../common/StartComponent";
 import { useEffect, useState } from "react";
 import { addReview, getReviews } from "../../slices/reviewSlice";
+import toast from "react-hot-toast";
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
@@ -37,8 +38,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
-          alert(`Only ${getQuantity} quantity can be added for this item`,
-          );
+          
+        toast.error(`Only ${getQuantity} quantity can be added for this item`,)
 
           return;
         }
@@ -54,13 +55,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       console.log(data,"tttttttttttttttttttttttttt")
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        alert(
-          "Product is added to cart",
-        );
+        toast.success("Product is added to cart")
         console.log("toast,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
       }
       else{
-        alert(data?.payload?.message)
+        toast.success(data?.payload?.message)
       }
     });
   }
@@ -87,16 +86,12 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         setRating(0);
         setReviewMsg("");
         dispatch(getReviews(productDetails?._id));
-        alert(
-         "Review added successfully!"
-        );
+        toast.success("Review added successfully!")
       }
        else{
         setRating(0);
         setReviewMsg("");
-        alert(
-          data.payload.message
-       );
+        toast.error(data.payload.message)
       }
     });
   }

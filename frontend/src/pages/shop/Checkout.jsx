@@ -8,11 +8,16 @@ import Address from "@/components/shop/Address";
 import UserCartItemsContent from "@/components/shop/CartItemsContent";
 import { Button } from "@/components/ui/button";
 import img from "../../assets/account.jpg";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Checkout() {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate=useNavigate()
+
+  console.log(cartItems,"ppppppppppppppppppppppppppp")
   
 
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
@@ -44,20 +49,20 @@ function Checkout() {
   async function handleInitiateRazorpayPayment() {
     console.log(cartItems,"-----------------------")
     if (!cartItems || cartItems.length === 0) {
-      alert("Your cart is empty. Please add items to proceed",
+      toast.error("Your cart is empty. Please add items to proceed",
         );
       return;
     }
 
     if (!currentSelectedAddress) {
-      alert( "Please select one address to proceed.",
+      toast.error( "Please select one address to proceed.",
        );
       return;
     }
 
     const isScriptLoaded = await loadRazorpayScript();
     if (!isScriptLoaded) {
-      alert( "Razorpay SDK failed to load. Check your internet connection.",
+      toast.error( "Razorpay SDK failed to load. Check your internet connection.",
         );
       return;
     }
@@ -126,14 +131,14 @@ function Checkout() {
               if (result?.payload?.success) {
                 
                 sessionStorage.removeItem("currentOrderId");
-                window.location.href = "/shop/payment-success"; // or /shop/payment-success
+                navigate("/shop/payment-success"); // or /shop/payment-success
               } else {
-                alert( "Payment verification failed. Please contact support.",
+                toast.error( "Payment verification failed. Please contact support.",
                   );
               }
             } catch (error) {
               console.log(error)
-              alert( "Payment verification error occurred.",
+              toast.error( "Payment verification error occurred.",
                );
             }
           }
@@ -151,11 +156,11 @@ function Checkout() {
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();
       } else {
-        alert( "Failed to create order. Please try again.",
+        toast.error( "Failed to create order. Please try again.",
           );
       }
     } catch (error) {
-      alert( "Payment failed. Please try again later.",
+      toast.error( "Payment failed. Please try again later.",
         );
     } finally {
       setIsPaymentStart(false);
@@ -184,9 +189,13 @@ function Checkout() {
           </div>
 
           <div className="mt-4 w-full">
-            <Button onClick={handleInitiateRazorpayPayment} disabled={isPaymentStart} className="w-full">
-              {isPaymentStart ? "Processing Razorpay Payment..." : "Checkout with Razorpay"}
+             
+              {cartItems?.items?.length>0 &&
+                 <Button onClick={handleInitiateRazorpayPayment} disabled={isPaymentStart} className="w-full">
+              {isPaymentStart? "Processing Razorpay Payment..." : "Checkout with Razorpay"}
             </Button>
+              }
+             
           </div>
         </div>
       </div>

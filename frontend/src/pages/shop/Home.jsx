@@ -27,6 +27,8 @@ import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "../../slices/cartSlice";
 import ProductDetailsDialog from "../../components/shop/ProductDetails";
 import { getFeatureImages } from "../../slices/commonSlice";
+import toast from 'react-hot-toast';
+
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -76,6 +78,7 @@ function HomePage() {
   }
 
   function handleAddtoCart(getCurrentProductId) {
+    const toastId = toast.loading('Adding item to Cart...');
     dispatch(
       addToCart({
         userId: user?.id,
@@ -85,8 +88,10 @@ function HomePage() {
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        alert( "Product is added to cart",
-        );
+         toast.success('"Product is added to cart"', { id: toastId });
+      }
+      else{
+        toast.error(data?.payload?.message, { id: toastId });
       }
     });
   }

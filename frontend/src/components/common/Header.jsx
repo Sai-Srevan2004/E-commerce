@@ -18,7 +18,7 @@ import { fetchCartItems } from '@/slices/cartSlice';
 import { logoutUser } from '@/slices/authSlice';
 import UserCartWrapper from '../shop/useCartWrapper';
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import Logo from '../../../public/Logo.png'
+import Logo from '../../assets/Logo.png'
 
 // MenuItems Component
 const MenuItems = () => {

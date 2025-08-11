@@ -9,34 +9,39 @@ import { Button } from '@/components/ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '@/slices/authSlice';
+import toast from 'react-hot-toast';
 
 const VerifyEmail = () => {
-    const {signUpData}=useSelector((state)=>state.auth)
+    const { signUpData } = useSelector((state) => state.auth);
     const [otp, setOtp] = useState("");
-    const navigate= useNavigate()
-    const dispatch=useDispatch()
-    console.log(signUpData,"ooooooooooo")
+    const [loading, setLoading] = useState(false);
 
-    useEffect(()=>{
-      if(!signUpData)
-      {
-        navigate('/auth/signup')
-      }
-    },[signUpData,navigate])
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
+    // Redirect if no signup data
+    useEffect(() => {
+        if (!signUpData) {
+            navigate('/auth/signup');
+        }
+    }, [signUpData, navigate]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(signUp({...signUpData,otp})).then((action)=>{
-                if(action.payload.success)
-                {
-                    alert("Signup successfull")
-                    navigate('/auth/login')
+        setLoading(true);
+
+        dispatch(signUp({ ...signUpData, otp }))
+            .then((action) => {
+                if (action.payload.success) {
+                    toast.success("Signup successful");
+                    navigate('/auth/login');
+                } else {
+                    toast.error(action.payload.message || "Something went wrong");
                 }
-                else{
-                    alert(action.payload.message)
-                }
-        })
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     return (
@@ -47,33 +52,43 @@ const VerifyEmail = () => {
                     Enter the 6-digit code sent to your email.
                 </p>
 
-                <div className="flex justify-center">
-                    <InputOTP
-                        maxLength={6}
-                        value={otp}
-                        onChange={setOtp}
-                        className="flex"
-                    >
-                        <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                        </InputOTPGroup>
-                        <InputOTPSeparator />
-                        <InputOTPGroup>
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                        </InputOTPGroup>
-                    </InputOTP>
-                </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="flex justify-center">
+                        <InputOTP
+                            maxLength={6}
+                            value={otp}
+                            onChange={setOtp}
+                            className="flex"
+                        >
+                            <InputOTPGroup>
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                            </InputOTPGroup>
+                            <InputOTPSeparator />
+                            <InputOTPGroup>
+                                <InputOTPSlot index={3} />
+                                <InputOTPSlot index={4} />
+                                <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                        </InputOTP>
+                    </div>
 
-                <Button
-                    onClick={handleSubmit}
-                    className="mt-6 w-full text-white py-2 rounded-lg transition"
-                >
-                    Submit
-                </Button>
+                    <Button
+                        type="submit"
+                        disabled={loading || otp.length !== 6}
+                        className={`mt-6 w-full text-white py-2 rounded-lg transition ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                        {loading ? (
+                            <div className="flex items-center justify-center gap-2">
+                                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                Verifying...
+                            </div>
+                        ) : (
+                            "Submit"
+                        )}
+                    </Button>
+                </form>
             </div>
         </div>
     );

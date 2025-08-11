@@ -22,13 +22,14 @@ import AdminFeatures from "./pages/admin/Features";
 import AdminOrders from "./pages/admin/Orders";
 import AdminProducts from "./pages/admin/Products";
 import UnAuthPage from "./pages/auth/UnAuthPage";
+import { Toaster } from 'react-hot-toast';
 const App = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated, authLoading } = useSelector(
     (state) => state.auth
   );
 
-  console.log(user,"oooooooooooooooooooooo")
+  console.log(user, "oooooooooooooooooooooo")
 
   useEffect(() => {
     dispatch(checkAuthh());
@@ -36,6 +37,35 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          // Global default style
+          style: {
+            fontSize: '16px',
+            borderRadius: '8px',
+          },
+          success: {
+            style: {
+              background: '#22c55e', // green
+              color: '#fff',
+            },
+          },
+          error: {
+            style: {
+              background: '#ef4444', // red
+              color: '#fff',
+            },
+          },
+          loading: {
+            style: {
+              background: '#facc15', // yellow
+              color: '#000',
+            },
+          },
+        }}
+      />
+
       <Routes>
         {/* Root redirect */}
         <Route
@@ -103,7 +133,7 @@ const App = () => {
           <Route path="features" element={<AdminFeatures />} />
         </Route>
 
-        <Route path="/unauth-page" element={<UnAuthPage/>}/>
+        <Route path="/unauth-page" element={<UnAuthPage />} />
 
         {/* Not Found */}
         <Route path="*" element={<NotFound />} />

@@ -72,7 +72,7 @@ function AdminProducts() {
             setOpenCreateProductsDialog(false);
             setImageFile(null);
             setFormData(initialFormData);
-            alert( "Product add successfully",
+            toast.success("Product add successfully"
             );
           }
         });

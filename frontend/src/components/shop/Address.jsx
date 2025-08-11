@@ -10,6 +10,7 @@ import {
   fetchAllAddresses,
 } from "../../slices/addressSlice";
 import AddressCard from "./AddressCard";
+import toast from "react-hot-toast";
 
 const initialAddressFormData = {
   address: "",
@@ -31,8 +32,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
 
     if (addressList.length >= 3 && currentEditedId === null) {
       setFormData(initialAddressFormData);
-      alert( "You can add max 3 addresses",
-       );
+      toast.error("You can add max 3 Address")
 
       return;
     }
@@ -49,8 +49,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
             dispatch(fetchAllAddresses(user?.id));
             setCurrentEditedId(null);
             setFormData(initialAddressFormData);
-            alert( "Address updated successfully",
-           );
+             toast.success("Address updated successfully")
           }
         })
       : dispatch(
@@ -62,8 +61,9 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
           if (data?.payload?.success) {
             dispatch(fetchAllAddresses(user?.id));
             setFormData(initialAddressFormData);
-            alert( "Address added successfully",
-           );
+            toast.success("Address added successfully")
+          }else{
+            toast.error("Fill the Form to add Address")
           }
         });
   }
@@ -74,8 +74,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchAllAddresses(user?.id));
-        alert( "Address deleted successfully",
-        );
+        toast.success("Address deleted successfully")
       }
     });
   }

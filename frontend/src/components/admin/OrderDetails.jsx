@@ -10,6 +10,7 @@ import {
   getOrderDetailsForAdmin,
   updateOrderStatus,
 } from "../../slices/admin/orderSlice";
+import toast from "react-hot-toast";
 
 const initialFormData = {
   status: "",
@@ -33,8 +34,7 @@ function AdminOrderDetailsView({ orderDetails }) {
         dispatch(getOrderDetailsForAdmin(orderDetails?._id));
         dispatch(getAllOrdersForAdmin());
         setFormData(initialFormData);
-        alert( data?.payload?.message,
-        );
+        toast.success(data?.payload?.message)
       }
     });
   }

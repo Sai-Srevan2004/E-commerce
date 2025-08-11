@@ -4,6 +4,7 @@ import { login } from "@/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -18,9 +19,9 @@ function LoginPage() {
     e.preventDefault();
     dispatch(login(formData)).then((action) => {
       if (action.payload.success) {
-        alert(action.payload.message);
+        toast.success(action.payload.message);
       } else {
-        alert(action.payload.message);
+        toast.error(action.payload.message);
       }
       setFormData({ email: "", password: "" });
     });

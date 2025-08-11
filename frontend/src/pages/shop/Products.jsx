@@ -25,6 +25,8 @@ import {
 import { addToCart,fetchCartItems } from '@/slices/cartSlice'
 import ProductDetailsDialog from '@/components/shop/ProductDetails'
 import {fetchProductDetails} from '../../slices/productsSlice'
+import toast from 'react-hot-toast';
+
 
 const Products = () => {
   const dispatch = useDispatch()
@@ -173,6 +175,8 @@ useEffect(() => {
   }
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
+     const toastId = toast.loading('Adding item to Cart...');
+     console.log("alert..................")
     let getCartItems = cartItems.items || [];
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
@@ -181,7 +185,7 @@ useEffect(() => {
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
-         alert(`Only ${getQuantity} quantity can be added for this item`,);
+         toast.error(`Only ${getQuantity} quantity can be added for this item`,);
           return;
         }
       }
@@ -195,10 +199,10 @@ useEffect(() => {
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-       alert("product added to cart");
+       toast.success('Item Added to Cart!', { id: toastId });
       }
       else{
-        alert(data?.payload?.message)
+        toast.error(data?.payload?.message, { id: toastId });
       }
     });
   }
