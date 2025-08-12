@@ -10,18 +10,21 @@ import { Button } from "@/components/ui/button";
 import img from "../../assets/account.jpg";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { clearCart } from "@/slices/cartSlice";
 
 function Checkout() {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
-  console.log(cartItems,"ppppppppppppppppppppppppppp")
-  
+  console.log(cartItems, "ppppppppppppppppppppppppppp")
+
 
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
   const [isPaymentStart, setIsPaymentStart] = useState(false);
+  const [isPaymentVerifying, setIsPaymentVerifying] = useState(false);
+
 
   // Calculate total amount in cart
   const totalCartAmount =
@@ -47,23 +50,23 @@ function Checkout() {
 
   // Trigger Razorpay payment flow
   async function handleInitiateRazorpayPayment() {
-    console.log(cartItems,"-----------------------")
+    console.log(cartItems, "-----------------------")
     if (!cartItems || cartItems.length === 0) {
       toast.error("Your cart is empty. Please add items to proceed",
-        );
+      );
       return;
     }
 
     if (!currentSelectedAddress) {
-      toast.error( "Please select one address to proceed.",
-       );
+      toast.error("Please select one address to proceed.",
+      );
       return;
     }
 
     const isScriptLoaded = await loadRazorpayScript();
     if (!isScriptLoaded) {
-      toast.error( "Razorpay SDK failed to load. Check your internet connection.",
-        );
+      toast.error("Razorpay SDK failed to load. Check your internet connection.",
+      );
       return;
     }
 
@@ -112,13 +115,15 @@ function Checkout() {
           handler: async function (response) {
             const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
 
-            console.log("res:==============>",response)
+            console.log("res:==============>", response)
 
             // Save the order ID temporarily
             sessionStorage.setItem("currentOrderId", resultAction.payload.orderId);
 
             // Dispatch capturePayment with Razorpay details
             try {
+              setIsPaymentVerifying(true); // 🔹 Start loader
+
               const result = await dispatch(
                 capturePayment({
                   paymentId: razorpay_payment_id,
@@ -127,19 +132,18 @@ function Checkout() {
                   razorpayOrderId: razorpay_order_id,
                 })
               );
-               console.log(result,"0000000000000000000")
+
               if (result?.payload?.success) {
-                
+                dispatch(clearCart());
                 sessionStorage.removeItem("currentOrderId");
-                navigate("/shop/payment-success"); // or /shop/payment-success
+                navigate("/shop/payment-success");
               } else {
-                toast.error( "Payment verification failed. Please contact support.",
-                  );
+                toast.error("Payment verification failed. Please contact support.");
               }
             } catch (error) {
-              console.log(error)
-              toast.error( "Payment verification error occurred.",
-               );
+              toast.error("Payment verification error occurred.");
+            } finally {
+              setIsPaymentVerifying(false); // 🔹 Stop loader
             }
           }
           ,
@@ -151,56 +155,64 @@ function Checkout() {
           theme: {
             color: "#3399cc",
           },
-        };
+      };
 
-        const paymentObject = new window.Razorpay(options);
-        paymentObject.open();
-      } else {
-        toast.error( "Failed to create order. Please try again.",
-          );
-      }
-    } catch (error) {
-      toast.error( "Payment failed. Please try again later.",
-        );
-    } finally {
-      setIsPaymentStart(false);
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } else {
+      toast.error("Failed to create order. Please try again.",
+      );
     }
+  } catch (error) {
+    toast.error("Payment failed. Please try again later.",
+    );
+  } finally {
+    setIsPaymentStart(false);
   }
+}
 
+if (isPaymentVerifying) {
   return (
-    <div className="flex flex-col">
-      <div className="relative h-[300px] w-full overflow-hidden">
-        <img src={img} alt="account" className="h-full w-full object-cover object-center" />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
-        <Address
-          selectedId={currentSelectedAddress}
-          setCurrentSelectedAddress={setCurrentSelectedAddress}
-        />
-        <div className="flex flex-col gap-4">
+    <div className="flex justify-center items-center h-screen">
+      <div className="text-lg font-bold">Verifying your payment...</div>
+    </div>
+  );
+}
+
+return (
+  <div className="flex flex-col">
+    <div className="relative h-[300px] w-full overflow-hidden">
+      <img src={img} alt="account" className="h-full w-full object-cover object-center" />
+    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
+      <Address
+        selectedId={currentSelectedAddress}
+        setCurrentSelectedAddress={setCurrentSelectedAddress}
+      />
+      <div className="flex flex-col gap-4">
+        {cartItems?.items?.length > 0 &&
+          cartItems.items.map((item) => <UserCartItemsContent key={item.productId} cartItem={item} />)}
+
+        <div className="mt-8 space-y-4">
+          <div className="flex justify-between">
+            <span className="font-bold">Total</span>
+            <span className="font-bold">${totalCartAmount}</span>
+          </div>
+        </div>
+
+        <div className="mt-4 w-full">
+
           {cartItems?.items?.length > 0 &&
-            cartItems.items.map((item) => <UserCartItemsContent key={item.productId} cartItem={item} />)}
-
-          <div className="mt-8 space-y-4">
-            <div className="flex justify-between">
-              <span className="font-bold">Total</span>
-              <span className="font-bold">${totalCartAmount}</span>
-            </div>
-          </div>
-
-          <div className="mt-4 w-full">
-             
-              {cartItems?.items?.length>0 &&
-                 <Button onClick={handleInitiateRazorpayPayment} disabled={isPaymentStart} className="w-full">
-              {isPaymentStart? "Processing Razorpay Payment..." : "Checkout with Razorpay"}
+            <Button onClick={handleInitiateRazorpayPayment} disabled={isPaymentStart} className="w-full">
+              {isPaymentStart ? "Processing Razorpay Payment..." : "Checkout with Razorpay"}
             </Button>
-              }
-             
-          </div>
+          }
+
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default Checkout;
