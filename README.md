@@ -140,6 +140,4 @@ You are free to use, modify, and distribute this project.
 GitHub: [Sai-Srevan2004](https://github.com/Sai-Srevan2004)
 ```
 
-***
 
-Would you like me to include a **“Deployed Demo”** and **“API Endpoints Overview”** section to make it ready for showcasing on GitHub or portfolios?
