@@ -3,7 +3,6 @@
 ![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-green?logo=node.js)
 ![MongoDB](https://img.shields.io/badge/Database-MongoDB-brightgreen?logo=mongodb)
-![License](https://img.shields.io/badge/License-MIT-orange)
 
 A full-featured **MERN stack e-commerce platform** offering secure payments, media management, and a modern admin dashboard.  
 ---
