@@ -138,6 +138,5 @@ You are free to use, modify, and distribute this project.
 
 **Sai Srevan** – Full Stack Developer  
 GitHub: [Sai-Srevan2004](https://github.com/Sai-Srevan2004)
-```
 
 
