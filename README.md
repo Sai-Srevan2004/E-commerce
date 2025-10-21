@@ -3,8 +3,11 @@
 ![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-green?logo=node.js)
 ![MongoDB](https://img.shields.io/badge/Database-MongoDB-brightgreen?logo=mongodb)
+![License](https://img.shields.io/badge/License-MIT-orange)
 
 A full-featured **MERN stack e-commerce platform** offering secure payments, media management, and a modern admin dashboard.  
+Designed to deliver a **scalable, fast, and user-friendly online shopping experience**.
+
 ---
 
 ## 🚀 Features
@@ -50,7 +53,7 @@ cd backend
 npm install
 
 # Install frontend dependencies
-cd frontend
+cd ../frontend
 npm install
 ```
 
@@ -114,7 +117,29 @@ Once started, visit the frontend URL shown in your terminal (usually `http://loc
 
 ---
 
-This project is licensed under the MIT License.  
+## 🧠 Key Highlights
 
+- Optimized state management using **Redux Toolkit** with async thunks  
+- Secure **JWT authentication** flow with refresh handling  
+- **Cloudinary** media uploads and optimized image rendering  
+- **Admin privileges** for CRUD operations across users, products, and orders  
+- Fully **responsive design** with Tailwind CSS and Shadcn UI
 
+---
 
+## 📜 License
+
+This project is licensed under the **MIT License**.  
+You are free to use, modify, and distribute this project.
+
+---
+
+## 👨‍💻 Author
+
+**Sai Srevan** – Full Stack Developer  
+GitHub: [Sai-Srevan2004](https://github.com/Sai-Srevan2004)
+```
+
+***
+
+Would you like me to include a **“Deployed Demo”** and **“API Endpoints Overview”** section to make it ready for showcasing on GitHub or portfolios?
