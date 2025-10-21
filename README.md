@@ -114,5 +114,7 @@ Once started, visit the frontend URL shown in your terminal (usually `http://loc
 
 ---
 
+This project is licensed under the MIT License.  
+
 
 
