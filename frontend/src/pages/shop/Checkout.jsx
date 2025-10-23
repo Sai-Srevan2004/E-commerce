@@ -50,126 +50,120 @@ function Checkout() {
 
   // Trigger Razorpay payment flow
   async function handleInitiateRazorpayPayment() {
-    console.log(cartItems, "-----------------------")
-    if (!cartItems || cartItems.length === 0) {
-      toast.error("Your cart is empty. Please add items to proceed",
-      );
-      return;
-    }
+  if (!cartItems || cartItems.items.length === 0) {
+    toast.error("Your cart is empty. Please add items to proceed");
+    return;
+  }
 
-    if (!currentSelectedAddress) {
-      toast.error("Please select one address to proceed.",
-      );
-      return;
-    }
+  if (!currentSelectedAddress) {
+    toast.error("Please select one address to proceed.");
+    return;
+  }
 
-    const isScriptLoaded = await loadRazorpayScript();
-    if (!isScriptLoaded) {
-      toast.error("Razorpay SDK failed to load. Check your internet connection.",
-      );
-      return;
-    }
+  const isScriptLoaded = await loadRazorpayScript();
+  if (!isScriptLoaded) {
+    toast.error("Razorpay SDK failed to load. Check your internet connection.");
+    return;
+  }
 
-    setIsPaymentStart(true);
+  setIsPaymentStart(true);
 
-    const orderData = {
-      userId: user?.id,
-      cartId: cartItems._id,
-      cartItems: cartItems.items.map((item) => ({
-        productId: item.productId,
-        title: item.title,
-        image: item.image,
-        price: item.salePrice > 0 ? item.salePrice : item.price,
-        quantity: item.quantity,
-      })),
-      addressInfo: {
-        addressId: currentSelectedAddress._id,
-        address: currentSelectedAddress.address,
-        city: currentSelectedAddress.city,
-        pincode: currentSelectedAddress.pincode,
-        phone: currentSelectedAddress.phone,
-        notes: currentSelectedAddress.notes,
-      },
-      orderStatus: "pending",
-      paymentMethod: "razorpay",
-      paymentStatus: "pending",
-      totalAmount: totalCartAmount,
-      orderDate: new Date(),
-      orderUpdateDate: new Date(),
-      paymentId: "",
-    };
+  const orderData = {
+    userId: user?.id,
+    cartId: cartItems._id,
+    cartItems: cartItems.items.map((item) => ({
+      productId: item.productId,
+      title: item.title,
+      image: item.image,
+      price: item.salePrice > 0 ? item.salePrice : item.price,
+      quantity: item.quantity,
+    })),
+    addressInfo: {
+      addressId: currentSelectedAddress._id,
+      address: currentSelectedAddress.address,
+      city: currentSelectedAddress.city,
+      pincode: currentSelectedAddress.pincode,
+      phone: currentSelectedAddress.phone,
+      notes: currentSelectedAddress.notes,
+    },
+    orderStatus: "pending",
+    paymentMethod: "razorpay",
+    paymentStatus: "pending",
+    totalAmount: totalCartAmount,
+    orderDate: new Date(),
+    orderUpdateDate: new Date(),
+    paymentId: "",
+  };
 
-    try {
-      const resultAction = await dispatch(initiateRazorpayOrder(orderData));
-      if (resultAction.payload && resultAction.payload.orderId) {
-        const { razorpayOrderId, amount, currency, } = resultAction.payload;
+  try {
+    const resultAction = await dispatch(initiateRazorpayOrder(orderData));
 
+    if (resultAction.payload && resultAction.payload.orderId) {
+      const { razorpayOrderId, amount, currency } = resultAction.payload;
 
-        const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY, // Razorpay key from backend
-          amount: amount * 100, // amount in paise (multiply by 100)
-          currency: currency,
-          name: "Your Shop Name",
-          description: "Order Payment",
-          order_id: razorpayOrderId,
-          handler: async function (response) {
-            const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY,
+        amount: amount * 100,
+        currency: currency,
+        name: "Your Shop Name",
+        description: "Order Payment",
+        order_id: razorpayOrderId,
+        handler: async function (response) {
+          const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
 
-            console.log("res:==============>", response)
+          sessionStorage.setItem("currentOrderId", resultAction.payload.orderId);
 
-            // Save the order ID temporarily
-            sessionStorage.setItem("currentOrderId", resultAction.payload.orderId);
+          try {
+            setIsPaymentVerifying(true);
 
-            // Dispatch capturePayment with Razorpay details
-            try {
-              setIsPaymentVerifying(true); // 🔹 Start loader
+            const result = await dispatch(
+              capturePayment({
+                paymentId: razorpay_payment_id,
+                orderId: resultAction.payload.orderId,
+                razorpaySignature: razorpay_signature,
+                razorpayOrderId: razorpay_order_id,
+              })
+            );
 
-              const result = await dispatch(
-                capturePayment({
-                  paymentId: razorpay_payment_id,
-                  orderId: resultAction.payload.orderId,
-                  razorpaySignature: razorpay_signature,
-                  razorpayOrderId: razorpay_order_id,
-                })
-              );
-
-              if (result?.payload?.success) {
-                dispatch(clearCart());
-                sessionStorage.removeItem("currentOrderId");
-                navigate("/shop/payment-success");
-              } else {
-                toast.error("Payment verification failed. Please contact support.");
-              }
-            } catch (error) {
-              toast.error("Payment verification error occurred.");
-            } finally {
-              setIsPaymentVerifying(false); // 🔹 Stop loader
+            if (result?.payload?.success) {
+              dispatch(clearCart());
+              sessionStorage.removeItem("currentOrderId");
+              navigate("/shop/payment-success");
+            } else {
+              toast.error("Payment verification failed. Please contact support.");
             }
+          } catch (error) {
+            toast.error("Payment verification error occurred.");
+          } finally {
+            setIsPaymentVerifying(false);
           }
-          ,
-          prefill: {
-            name: user?.name,
-            email: user?.email,
-            contact: currentSelectedAddress?.phone,
-          },
-          theme: {
-            color: "#3399cc",
-          },
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+          contact: currentSelectedAddress?.phone,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+        ondismiss: function () {
+          toast.error("Payment popup closed. Payment not completed.");
+          setIsPaymentStart(false); // reset the button state
+        },
       };
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } else {
-      toast.error("Failed to create order. Please try again.",
-      );
+      toast.error("Failed to create order. Please try again.");
     }
   } catch (error) {
-    toast.error("Payment failed. Please try again later.",
-    );
+    toast.error("Payment failed. Please try again later.");
   } finally {
     setIsPaymentStart(false);
   }
 }
+
 
 if (isPaymentVerifying) {
   return (
