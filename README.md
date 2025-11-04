@@ -63,10 +63,12 @@ npm install
 
 Create separate `.env` files for both **frontend** and **backend** as shown below.
 
-### 🖥️ Backend `.env`
+### 🖥️ Backend and frontend contains two .env files `.env.development` and `.env.production` 
 
+### `.env.development`
 ```
 # Server Configuration
+NODE_ENV=development
 PORT=YOUR_PORT
 
 # MongoDB Connection URI
@@ -88,12 +90,50 @@ RAZORPAY_SECRET=YOUR_RAZORPAY_SECRET
 MAIL_HOST=smtp.gmail.com
 MAIL_USER=YOUR_MAIL_TO_SEND_EMAILS
 MAIL_PASS=YOUR_MAIL_PASS
+
+FRONTEND_URL=YOUR_DEVELOPMENT_FRONTEND_URI
 ```
 
-### 🌐 Frontend `.env`
+### `.env.production`
+```
+# Server Configuration
+NODE_ENV=production
+PORT=YOUR_PORT
+
+# MongoDB Connection URI
+MONGO_URI=YOUR_MONGO_URI
+
+# JWT Token Secret
+JWT_SECRET=YOUR_JWT_SECRET
+
+# Cloudinary Configuration
+CLOUD_NAME=YOUR_CLOUDINARY_CLOUDNAME
+API_KEY=YOUR_CLOUDINARY_APIKEY
+API_SECRET=YOUR_CLOUDINARY_APISECRET
+
+# Razorpay Credentials
+RAZORPAY_KEY=YOUR_RAZORPAY_KEY
+RAZORPAY_SECRET=YOUR_RAZORPAY_SECRET
+
+# Mail SMTP Configuration
+MAIL_HOST=smtp.gmail.com
+MAIL_USER=YOUR_MAIL_TO_SEND_EMAILS
+MAIL_PASS=YOUR_MAIL_PASS
+
+FRONTEND_URL=YOUR_PRODUCTION_FRONTEND_URI
+```
+
+### 🌐 Frontend `.env.development`
 
 ```
-VITE_BACKEND_URI=YOUR_BACKEND_URL
+VITE_BACKEND_URI=YOUR_DEVELOPMENT_BACKEND_URL
+VITE_RAZORPAY_KEY=YOUR_RAZORPAY_KEY
+```
+
+### 🌐 Frontend `.env.production`
+
+```
+VITE_BACKEND_URI=YOUR_PRODUCTION_BACKEND_URL
 VITE_RAZORPAY_KEY=YOUR_RAZORPAY_KEY
 ```
 
